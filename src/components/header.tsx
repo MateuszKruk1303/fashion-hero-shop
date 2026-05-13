@@ -10,6 +10,7 @@ import { useAuth } from "./auth-provider";
 
 const secondaryLinks = [
   { label: "About", href: "/about" },
+  { label: "Sprzedawcy", href: "/seller/dashboard" },
 ];
 
 interface HeaderProps {

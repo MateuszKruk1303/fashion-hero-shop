@@ -94,6 +94,21 @@ export default function AccountPage() {
         </div>
       </section>
 
+      {/* Seller Panel */}
+      <section className="mb-10">
+        <div className="flex items-center justify-between mb-4 pb-2 border-b border-black/10">
+          <h2 className="text-[12px] font-medium uppercase tracking-[0.8px] text-charcoal">
+            Panel Sprzedawcy
+          </h2>
+        </div>
+        <Link
+          href="/seller/dashboard"
+          className="btn-cta text-[12px] inline-block"
+        >
+          Przejdź do panelu →
+        </Link>
+      </section>
+
       <button
         onClick={() => {
           logout();

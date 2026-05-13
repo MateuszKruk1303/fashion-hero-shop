@@ -1,3 +1,5 @@
+export type SellerSegment = "high-gmv" | "high-margin" | "new" | "standard";
+
 export interface Seller {
   id: string;
   name: string;
@@ -6,4 +8,8 @@ export interface Seller {
   logo: string;
   joinedYear: number;
   rating: number;
+  activeOfferCount: number;
+  campaignCount: number;
+  monthlyGMV: number;
+  segment: SellerSegment;
 }
