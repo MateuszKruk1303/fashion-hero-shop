@@ -3,14 +3,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { SearchIcon, UserIcon, CartIcon, MenuIcon, CloseIcon, HeartIcon } from "./icons";
+import {
+  SearchIcon,
+  UserIcon,
+  CartIcon,
+  MenuIcon,
+  CloseIcon,
+  HeartIcon,
+} from "./icons";
 import { SearchModal } from "./search-modal";
 import { MegaMenuNav, MobileMegaMenuContent } from "./mega-menu";
 import { useAuth } from "./auth-provider";
 
 const secondaryLinks = [
   { label: "About", href: "/about" },
-  { label: "Sprzedawcy", href: "/seller/dashboard" },
+  { label: "Panel Sprzedawcy", href: "/seller/dashboard" },
 ];
 
 interface HeaderProps {
@@ -19,7 +26,11 @@ interface HeaderProps {
   wishlistCount?: number;
 }
 
-export function Header({ onCartOpen, cartCount = 0, wishlistCount = 0 }: HeaderProps) {
+export function Header({
+  onCartOpen,
+  cartCount = 0,
+  wishlistCount = 0,
+}: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { user } = useAuth();
@@ -108,7 +119,7 @@ export function Header({ onCartOpen, cartCount = 0, wishlistCount = 0 }: HeaderP
       <div
         className={cn(
           "lg:hidden overflow-hidden transition-all duration-300",
-          mobileMenuOpen ? "max-h-[500px]" : "max-h-0"
+          mobileMenuOpen ? "max-h-[500px]" : "max-h-0",
         )}
       >
         <div className="px-4 py-4 space-y-1 border-t border-black/5">
