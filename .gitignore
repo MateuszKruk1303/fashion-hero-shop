@@ -43,3 +43,4 @@ next-env.d.ts
 
 # User-specific skills (not part of the template)
 .claude/skills/customize/
+.claude
