@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Megaphone, X } from "lucide-react";
 import posthog from "posthog-js";
@@ -26,10 +26,14 @@ const COPY = {
 export function CpcBanner({ seller, onDismiss }: CpcBannerProps) {
   const viewLogged = useRef(false);
 
-  const variant =
-    posthog.getFeatureFlag("ab-testing-for-promoted-listings-campaign") === "test"
-      ? "test"
-      : "control";
+  const [variant, setVariant] = useState<"control" | "test">("control");
+
+  useEffect(() => {
+    posthog.onFeatureFlags(() => {
+      const flag = posthog.getFeatureFlag("ab-testing-for-promoted-listings-campaign");
+      setVariant(flag === "test" ? "test" : "control");
+    });
+  }, []);
 
   const { headline, sub } = COPY[variant];
 
