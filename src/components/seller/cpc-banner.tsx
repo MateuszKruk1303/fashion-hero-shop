@@ -26,7 +26,7 @@ const COPY = {
 export function CpcBanner({ seller, onDismiss }: CpcBannerProps) {
   const viewLogged = useRef(false);
 
-  const [variant, setVariant] = useState<"control" | "test">("control");
+  const [variant, setVariant] = useState<"control" | "test" | null>(null);
 
   useEffect(() => {
     posthog.onFeatureFlags(() => {
@@ -35,13 +35,15 @@ export function CpcBanner({ seller, onDismiss }: CpcBannerProps) {
     });
   }, []);
 
-  const { headline, sub } = COPY[variant];
+  const { headline, sub } = COPY[variant ?? "control"];
 
   useEffect(() => {
-    if (viewLogged.current) return;
+    if (!variant || viewLogged.current) return;
     viewLogged.current = true;
     logCpcEvent({ event: "banner_view", sellerId: seller.id, segment: seller.segment });
-  }, [seller.id, seller.segment]);
+  }, [variant, seller.id, seller.segment]);
+
+  if (!variant) return null;
 
   function handleCtaClick() {
     logCpcEvent({ event: "banner_click", sellerId: seller.id, segment: seller.segment });
