@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Megaphone, X } from "lucide-react";
+import posthog from "posthog-js";
 import type { Seller } from "@/types";
 import { logCpcEvent } from "@/lib/cpc-analytics";
 
@@ -11,8 +12,26 @@ interface CpcBannerProps {
   onDismiss: () => void;
 }
 
+const COPY = {
+  control: {
+    headline: "Uruchom swoją pierwszą kampanię za darmo — 7 dni na nasz koszt",
+    sub: "Promuj swoje produkty i zdobywaj nowych klientów bez ryzyka.",
+  },
+  test: {
+    headline: "Twoje produkty do 3× więcej zamówień — pierwsze 7 dni gratis",
+    sub: "Promuj swoje produkty i zdobywaj nowych klientów bez ryzyka.",
+  },
+};
+
 export function CpcBanner({ seller, onDismiss }: CpcBannerProps) {
   const viewLogged = useRef(false);
+
+  const variant =
+    posthog.getFeatureFlag("ab-testing-for-promoted-listings-campaign") === "test"
+      ? "test"
+      : "control";
+
+  const { headline, sub } = COPY[variant];
 
   useEffect(() => {
     if (viewLogged.current) return;
@@ -32,10 +51,10 @@ export function CpcBanner({ seller, onDismiss }: CpcBannerProps) {
 
       <div className="flex-1 min-w-0">
         <p className="text-[13px] font-semibold leading-snug">
-          Uruchom swoją pierwszą kampanię za darmo — 7 dni na nasz koszt
+          {headline}
         </p>
         <p className="text-[12px] text-white/60 mt-0.5">
-          Promuj swoje produkty i zdobywaj nowych klientów bez ryzyka.
+          {sub}
         </p>
       </div>
 
