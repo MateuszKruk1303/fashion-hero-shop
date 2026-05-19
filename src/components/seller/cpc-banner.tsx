@@ -29,10 +29,20 @@ export function CpcBanner({ seller, onDismiss }: CpcBannerProps) {
   const [variant, setVariant] = useState<"control" | "test" | null>(null);
 
   useEffect(() => {
-    posthog.onFeatureFlags(() => {
+    const resolve = () => {
       const flag = posthog.getFeatureFlag("ab-testing-for-promoted-listings-campaign");
       setVariant(flag === "test" ? "test" : "control");
-    });
+    };
+
+    const immediate = posthog.getFeatureFlag("ab-testing-for-promoted-listings-campaign");
+    if (immediate !== undefined) {
+      resolve();
+    } else {
+      posthog.onFeatureFlags(resolve);
+      // fallback: show control if flags never load
+      const timer = setTimeout(() => setVariant((v) => v ?? "control"), 2000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const { headline, sub } = COPY[variant ?? "control"];
