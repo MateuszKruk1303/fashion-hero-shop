@@ -26,34 +26,22 @@ const COPY = {
 export function CpcBanner({ seller, onDismiss }: CpcBannerProps) {
   const viewLogged = useRef(false);
 
-  const [variant, setVariant] = useState<"control" | "test" | null>(null);
+  const [variant, setVariant] = useState<"control" | "test">("control");
 
   useEffect(() => {
-    const resolve = () => {
+    posthog.onFeatureFlags(() => {
       const flag = posthog.getFeatureFlag("ab-testing-for-promoted-listings-campaign");
-      setVariant(flag === "test" ? "test" : "control");
-    };
-
-    const immediate = posthog.getFeatureFlag("ab-testing-for-promoted-listings-campaign");
-    if (immediate !== undefined) {
-      resolve();
-    } else {
-      posthog.onFeatureFlags(resolve);
-      // fallback: show control if flags never load
-      const timer = setTimeout(() => setVariant((v) => v ?? "control"), 2000);
-      return () => clearTimeout(timer);
-    }
+      if (flag === "test") setVariant("test");
+    });
   }, []);
 
-  const { headline, sub } = COPY[variant ?? "control"];
+  const { headline, sub } = COPY[variant];
 
   useEffect(() => {
-    if (!variant || viewLogged.current) return;
+    if (viewLogged.current) return;
     viewLogged.current = true;
     logCpcEvent({ event: "banner_view", sellerId: seller.id, segment: seller.segment });
-  }, [variant, seller.id, seller.segment]);
-
-  if (!variant) return null;
+  }, [seller.id, seller.segment]);
 
   function handleCtaClick() {
     logCpcEvent({ event: "banner_click", sellerId: seller.id, segment: seller.segment });
